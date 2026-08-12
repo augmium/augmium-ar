@@ -4,11 +4,9 @@ AFRAME.registerComponent('surface-placement', {
 
         this.hitTestSource = null;
         this.referenceSpace = null;
-        this.placed = false;
-        this.hasHit = false;
 
-        this.reticle = document.querySelector('#reticle');
-        this.cube = document.querySelector('#cube');
+        this.reticle =
+            document.querySelector('#reticle');
 
         const scene = this.el.sceneEl;
 
@@ -36,34 +34,12 @@ AFRAME.registerComponent('surface-placement', {
 
             } catch (error) {
 
-                console.error('HIT TEST ERROR:', error);
+                console.error(
+                    'HIT TEST ERROR:',
+                    error
+                );
 
             }
-
-        });
-
-
-        scene.canvas.addEventListener('touchend', () => {
-
-            if (this.placed) {
-                return;
-            }
-
-            if (!this.hasHit) {
-                console.log('No surface detected yet.');
-                return;
-            }
-
-            this.placed = true;
-
-            const position =
-                this.reticle.object3D.position;
-
-            this.cube.object3D.position.copy(position);
-
-            this.cube.setAttribute('visible', true);
-
-            console.log('OBJECT PLACED');
 
         });
 
@@ -74,8 +50,7 @@ AFRAME.registerComponent('surface-placement', {
 
         if (
             !this.hitTestSource ||
-            !this.referenceSpace ||
-            this.placed
+            !this.referenceSpace
         ) {
             return;
         }
@@ -95,19 +70,13 @@ AFRAME.registerComponent('surface-placement', {
                 this.hitTestSource
             );
 
-
         if (results.length === 0) {
 
-            this.hasHit = false;
-
-            this.reticle.setAttribute(
-                'visible',
-                false
-            );
+            this.reticle.object3D.visible = false;
 
             return;
-        }
 
+        }
 
         const hit = results[0];
 
@@ -120,10 +89,8 @@ AFRAME.registerComponent('surface-placement', {
             return;
         }
 
-
         const position =
             pose.transform.position;
-
 
         this.reticle.object3D.position.set(
             position.x,
@@ -131,13 +98,7 @@ AFRAME.registerComponent('surface-placement', {
             position.z
         );
 
-
-        this.hasHit = true;
-
-        this.reticle.setAttribute(
-            'visible',
-            true
-        );
+        this.reticle.object3D.visible = true;
 
     }
 
