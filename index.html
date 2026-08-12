@@ -2,51 +2,69 @@
 <html>
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Augmium AR Test</title>
 
     <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
 
     <style>
+
         body {
             margin: 0;
             overflow: hidden;
         }
+
     </style>
+
 </head>
 
 <body>
 
     <a-scene
-        surface-placement
-        webxr="mode: ar; requiredFeatures: hit-test; referenceSpaceType: local;"
-        xr-mode-ui="enabled: true; enterAREnabled: true; XRMode: ar;"
-        vr-mode-ui="enabled: false"
-        renderer="alpha: true">
 
-        <a-ring
-            id="reticle"
-            visible="false"
-            radius-inner="0.08"
-            radius-outer="0.12"
-            color="#00FF88"
-            rotation="-90 0 0">
-        </a-ring>
+        webxr="
+            mode: ar;
+            requiredFeatures: hit-test;
+            referenceSpaceType: local;
+        "
+
+        xr-mode-ui="
+            enabled: true;
+            XRMode: ar;
+        "
+
+        vr-mode-ui="enabled: false"
+
+        renderer="alpha: true"
+
+        ar-hit-test="
+            target: #cube;
+            type: footprint;
+        "
+    >
 
         <a-box
+
             id="cube"
+
             visible="false"
+
             scale="0.2 0.2 0.2"
-            color="#D4AF37">
+
+            color="#D4AF37"
+        >
         </a-box>
+
 
         <a-camera></a-camera>
 
-    </a-scene>
 
-    <script src="app.js"></script>
+    </a-scene>
 
 </body>
 
