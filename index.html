@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Augmium AR</title>
+
+    <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
+</head>
+
+<body>
+
+    <a-scene
+    xr-mode-ui="XRMode: ar"
+    webxr="requiredFeatures: hit-test;">
+
+        <a-box
+            position="0 1 -3"
+            rotation="0 45 0"
+            color="#D4AF37"
+            width="1"
+            height="1"
+            depth="1">
+        </a-box>
+
+        <a-camera position="0 1.6 0"></a-camera>
+
+    </a-scene>
+
+</body>
+</html>
