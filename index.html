@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,19 +20,21 @@
 <body>
 
     <a-scene
-        xr-mode-ui="enabled: true; XRmode: ar;"
+        webxr="mode: ar; requiredFeatures: hit-test; referenceSpaceType: local;"
+        xr-mode-ui="enabled: true; enterAREnabled: true; XRMode: ar;"
         vr-mode-ui="enabled: false"
         renderer="alpha: true">
 
         <a-box
-            position="0 0 -2"
-            color="#D4AF37"
-            scale="0.3 0.3 0.3">
+            position="0 0 -1"
+            scale="0.2 0.2 0.2"
+            color="#D4AF37">
         </a-box>
 
-        <a-camera position="0 1.6 0"></a-camera>
+        <a-camera></a-camera>
 
     </a-scene>
 
 </body>
+
 </html>
