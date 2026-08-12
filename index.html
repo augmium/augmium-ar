@@ -26,28 +26,31 @@
 <body>
 
     <a-scene
-
+        surface-placement
         webxr="
-            mode: inline;
-            optionalFeatures: hit-test;
+            mode: ar;
+            requiredFeatures: hit-test;
             referenceSpaceType: local;
         "
-
         xr-mode-ui="
             enabled: true;
             XRMode: ar;
         "
-
         vr-mode-ui="enabled: false"
+        renderer="alpha: true">
 
-        renderer="alpha: true"
+        <!-- Our custom reticle -->
+        <a-ring
+            id="reticle"
+            visible="false"
+            radius-inner="0.12"
+            radius-outer="0.16"
+            color="#00FF00"
+            rotation="-90 0 0">
+        </a-ring>
 
-        ar-hit-test="
-            type: map;
-            map-size: 0.5 0.5;
-        "
-    >
 
+        <!-- Temporary test object -->
         <a-box
             id="cube"
             visible="false"
@@ -55,9 +58,12 @@
             color="#D4AF37">
         </a-box>
 
+
         <a-camera></a-camera>
 
     </a-scene>
+
+    <script src="app.js"></script>
 
 </body>
 
