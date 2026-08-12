@@ -19,26 +19,6 @@
             overflow: hidden;
         }
 
-        #status {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-
-            padding: 10px 16px;
-
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-
-            border-radius: 20px;
-
-            pointer-events: none;
-        }
-
     </style>
 
 </head>
@@ -46,7 +26,6 @@
 <body>
 
     <a-scene
-
         webxr="
             mode: inline;
             optionalFeatures: hit-test;
@@ -58,65 +37,40 @@
             XRMode: ar;
         "
 
-    vr-mode-ui="enabled: false"
-    renderer="alpha: true"
-    
-    ar-hit-test="
-        target: #cube;
-        type: footprint;
-    ">
+        vr-mode-ui="enabled: false"
 
-        <a-box
+        renderer="alpha: true"
 
-            id="cube"
+        ar-hit-test="
+            target: #reticle;
+            type: footprint;
+        "
+    >
 
+        <!-- Temporary green reticle -->
+        <a-ring
+            id="reticle"
             visible="false"
+            radius-inner="0.12"
+            radius-outer="0.15"
+            color="#00FF00"
+            rotation="-90 0 0">
+        </a-ring>
 
+
+        <!-- Temporary cube -->
+        <a-box
+            id="cube"
+            visible="false"
             scale="0.2 0.2 0.2"
-
-            color="#D4AF37"
-        >
+            color="#D4AF37">
         </a-box>
 
 
         <a-camera></a-camera>
 
-
     </a-scene>
 
-<script>
-
-    const scene = document.querySelector('a-scene');
-
-    const status = document.querySelector('#status');
-
-
-    scene.addEventListener('ar-hit-test-start', () => {
-
-        status.textContent = 'SURFACE: SEARCHING...';
-
-    });
-
-
-    scene.addEventListener('ar-hit-test-achieved', () => {
-
-        status.textContent = 'SURFACE: FOUND ✓  —  TAP TO PLACE';
-
-    });
-
-
-    scene.addEventListener('ar-hit-test-select', () => {
-
-        status.textContent = 'PLACED ✓';
-
-    });
-
-</script>
-
 </body>
-
-<div id="status">
-    SURFACE: SEARCHING...
-</div>
 
 </html>
