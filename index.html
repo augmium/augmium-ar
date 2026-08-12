@@ -19,6 +19,26 @@
             overflow: hidden;
         }
 
+        #status {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+
+            padding: 10px 16px;
+
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+
+            border-radius: 20px;
+
+            pointer-events: none;
+        }
+
     </style>
 
 </head>
@@ -28,8 +48,8 @@
     <a-scene
 
         webxr="
-            mode: ar;
-            requiredFeatures: hit-test;
+            mode: inline;
+            optionalFeatures: hit-test;
             referenceSpaceType: local;
         "
 
@@ -38,15 +58,13 @@
             XRMode: ar;
         "
 
-        vr-mode-ui="enabled: false"
-
-        renderer="alpha: true"
-
-        ar-hit-test="
-            target: #cube;
-            type: footprint;
-        "
-    >
+    vr-mode-ui="enabled: false"
+    renderer="alpha: true"
+    
+    ar-hit-test="
+        target: #cube;
+        type: footprint;
+    ">
 
         <a-box
 
@@ -66,6 +84,39 @@
 
     </a-scene>
 
+<script>
+
+    const scene = document.querySelector('a-scene');
+
+    const status = document.querySelector('#status');
+
+
+    scene.addEventListener('ar-hit-test-start', () => {
+
+        status.textContent = 'SURFACE: SEARCHING...';
+
+    });
+
+
+    scene.addEventListener('ar-hit-test-achieved', () => {
+
+        status.textContent = 'SURFACE: FOUND ✓  —  TAP TO PLACE';
+
+    });
+
+
+    scene.addEventListener('ar-hit-test-select', () => {
+
+        status.textContent = 'PLACED ✓';
+
+    });
+
+</script>
+
 </body>
+
+<div id="status">
+    SURFACE: SEARCHING...
+</div>
 
 </html>
