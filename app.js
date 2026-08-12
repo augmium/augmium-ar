@@ -4,15 +4,14 @@ AFRAME.registerComponent('surface-placement', {
 
         this.hitTestSource = null;
         this.referenceSpace = null;
+        this.placed = false;
+        this.hasHit = false;
 
         this.reticle = document.querySelector('#reticle');
         this.cube = document.querySelector('#cube');
 
-        this.placed = false;
-
         const scene = this.el.sceneEl;
 
-        // Start AR
         scene.addEventListener('enter-vr', async () => {
 
             console.log('AR started');
@@ -22,17 +21,14 @@ AFRAME.registerComponent('surface-placement', {
 
             try {
 
-                // Reference space attached to the phone
                 const viewerSpace =
                     await session.requestReferenceSpace('viewer');
 
-                // Create hit-test source
                 this.hitTestSource =
                     await session.requestHitTestSource({
                         space: viewerSpace
                     });
 
-                // Reference space used by the scene
                 this.referenceSpace =
                     renderer.xr.getReferenceSpace();
 
@@ -40,56 +36,42 @@ AFRAME.registerComponent('surface-placement', {
 
             } catch (error) {
 
-                console.error(
-                    'HIT TEST ERROR:',
-                    error
-                );
+                console.error('HIT TEST ERROR:', error);
 
             }
 
         });
 
 
-        // Tap anywhere on the screen
-        scene.canvas.addEventListener(
-            'touchend',
-            () => {
+        scene.canvas.addEventListener('touchend', () => {
 
-                // Don't allow another placement
-                if (this.placed) {
-                    return;
-                }
-
-                // Don't place if no surface is detected
-                if (!this.reticle.object3D.visible) {
-                    return;
-                }
-
-                // Lock the placement
-                this.placed = true;
-
-                // Save reticle position
-                const position =
-                    this.reticle.object3D.position;
-
-                this.cube.object3D.position.copy(
-                    position
-                );
-
-                // Show cube
-                this.cube.object3D.visible = true;
-
-                console.log('OBJECT PLACED');
-
+            if (this.placed) {
+                return;
             }
-        );
+
+            if (!this.hasHit) {
+                console.log('No surface detected yet.');
+                return;
+            }
+
+            this.placed = true;
+
+            const position =
+                this.reticle.object3D.position;
+
+            this.cube.object3D.position.copy(position);
+
+            this.cube.setAttribute('visible', true);
+
+            console.log('OBJECT PLACED');
+
+        });
 
     },
 
 
     tick: function () {
 
-        // Stop updating after placement
         if (
             !this.hitTestSource ||
             !this.referenceSpace ||
@@ -114,26 +96,25 @@ AFRAME.registerComponent('surface-placement', {
             );
 
 
-        // No surface detected
         if (results.length === 0) {
 
-            this.reticle.object3D.visible = false;
+            this.hasHit = false;
+
+            this.reticle.setAttribute(
+                'visible',
+                false
+            );
 
             return;
-
         }
 
 
-        // First detected surface
         const hit = results[0];
 
-
-        // Get its position
         const pose =
             hit.getPose(
                 this.referenceSpace
             );
-
 
         if (!pose) {
             return;
@@ -144,7 +125,6 @@ AFRAME.registerComponent('surface-placement', {
             pose.transform.position;
 
 
-        // Move reticle
         this.reticle.object3D.position.set(
             position.x,
             position.y,
@@ -152,8 +132,12 @@ AFRAME.registerComponent('surface-placement', {
         );
 
 
-        // Show reticle
-        this.reticle.object3D.visible = true;
+        this.hasHit = true;
+
+        this.reticle.setAttribute(
+            'visible',
+            true
+        );
 
     }
 
