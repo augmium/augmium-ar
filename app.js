@@ -8,7 +8,14 @@ AFRAME.registerComponent('surface-placement', {
         this.reticle =
             document.querySelector('#reticle');
 
+        this.placed = false;
+
         const scene = this.el.sceneEl;
+
+
+        // -------------------------
+        // START AR
+        // -------------------------
 
         scene.addEventListener('enter-vr', async () => {
 
@@ -43,17 +50,44 @@ AFRAME.registerComponent('surface-placement', {
 
         });
 
+
+        // -------------------------
+        // TAP TO LOCK
+        // -------------------------
+
+        scene.canvas.addEventListener(
+            'touchend',
+            () => {
+
+                if (!this.reticle.object3D.visible) {
+                    return;
+                }
+
+                this.placed = true;
+
+                console.log('SURFACE LOCKED');
+
+            }
+        );
+
     },
 
 
+    // -------------------------
+    // HIT TEST LOOP
+    // -------------------------
+
     tick: function () {
 
+        // Stop updating once placed
         if (
             !this.hitTestSource ||
-            !this.referenceSpace
+            !this.referenceSpace ||
+            this.placed
         ) {
             return;
         }
+
 
         const renderer =
             this.el.sceneEl.renderer;
@@ -65,11 +99,14 @@ AFRAME.registerComponent('surface-placement', {
             return;
         }
 
+
         const results =
             frame.getHitTestResults(
                 this.hitTestSource
             );
 
+
+        // No surface detected
         if (results.length === 0) {
 
             this.reticle.object3D.visible = false;
@@ -78,26 +115,35 @@ AFRAME.registerComponent('surface-placement', {
 
         }
 
+
+        // First detected surface
         const hit = results[0];
+
 
         const pose =
             hit.getPose(
                 this.referenceSpace
             );
 
+
         if (!pose) {
             return;
         }
 
+
         const position =
             pose.transform.position;
 
+
+        // Move reticle
         this.reticle.object3D.position.set(
             position.x,
             position.y,
             position.z
         );
 
+
+        // Show reticle
         this.reticle.object3D.visible = true;
 
     }
