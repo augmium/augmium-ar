@@ -4,19 +4,15 @@ AFRAME.registerComponent('surface-placement', {
 
         this.hitTestSource = null;
         this.referenceSpace = null;
+        this.placed = false;
 
         this.reticle =
             document.querySelector('#reticle');
 
-        this.placed = false;
-
         const scene = this.el.sceneEl;
 
 
-        // -------------------------
-        // START AR
-        // -------------------------
-
+        // Start AR
         scene.addEventListener('enter-vr', async () => {
 
             console.log('AR started');
@@ -51,18 +47,18 @@ AFRAME.registerComponent('surface-placement', {
         });
 
 
-        // -------------------------
-        // TAP TO LOCK
-        // -------------------------
-
+        // Tap to lock
         scene.canvas.addEventListener(
             'touchend',
             () => {
 
+                // Don't do anything if we haven't
+                // detected a surface.
                 if (!this.reticle.object3D.visible) {
                     return;
                 }
 
+                // Lock the reticle.
                 this.placed = true;
 
                 console.log('SURFACE LOCKED');
@@ -73,13 +69,9 @@ AFRAME.registerComponent('surface-placement', {
     },
 
 
-    // -------------------------
-    // HIT TEST LOOP
-    // -------------------------
-
     tick: function () {
 
-        // Stop updating once placed
+        // Once placed, stop updating the reticle.
         if (
             !this.hitTestSource ||
             !this.referenceSpace ||
@@ -106,7 +98,7 @@ AFRAME.registerComponent('surface-placement', {
             );
 
 
-        // No surface detected
+        // No surface detected.
         if (results.length === 0) {
 
             this.reticle.object3D.visible = false;
@@ -116,15 +108,13 @@ AFRAME.registerComponent('surface-placement', {
         }
 
 
-        // First detected surface
+        // Get first surface hit.
         const hit = results[0];
-
 
         const pose =
             hit.getPose(
                 this.referenceSpace
             );
-
 
         if (!pose) {
             return;
@@ -135,7 +125,7 @@ AFRAME.registerComponent('surface-placement', {
             pose.transform.position;
 
 
-        // Move reticle
+        // Move reticle to detected surface.
         this.reticle.object3D.position.set(
             position.x,
             position.y,
@@ -143,7 +133,7 @@ AFRAME.registerComponent('surface-placement', {
         );
 
 
-        // Show reticle
+        // Show reticle.
         this.reticle.object3D.visible = true;
 
     }
